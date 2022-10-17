@@ -1,3 +1,4 @@
+
 var storageAccountName = '${uniqueSolutionPrefix}storage'
 var storageAccountType = 'Storage'
 var credentialsContainerName = 'stationcredentials'
@@ -58,4 +59,8 @@ module discoveryService 'modules/discoveryService.bicep' = {
     uniqueSolutionPrefix: uniqueSolutionPrefix
     location: location
   }
+}
+
+module observability 'modules/observability.bicep' = {
+
 }
