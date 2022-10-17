@@ -22,6 +22,9 @@ param useAzureMonitorOnEdge bool
 @description('The Git version to use. Default is 2.1.0.')
 param version string = '2.1.0'
 
+@description('The name of the redis resource.')
+param redisCacheName string
+
 var appInsightName = '${uniqueSolutionPrefix}insight'
 var functionName = '${uniqueSolutionPrefix}function'
 var functionZipBinary = 'https://github.com/${gitUsername}/iotedge-lorawan-starterkit/releases/download/v${version}/function-${version}.zip'
@@ -29,7 +32,6 @@ var hostingPlanName = '${uniqueSolutionPrefix}plan'
 var iotHubName = '${uniqueSolutionPrefix}hub'
 var iotHubOwnerPolicyName = 'iothubowner'
 var logAnalyticsName = '${uniqueSolutionPrefix}log'
-var redisCacheName = '${uniqueSolutionPrefix}redis'
 var storageAccountName = '${uniqueSolutionPrefix}storage'
 
 // RESOURCES DEPENDENCIES
@@ -44,10 +46,6 @@ resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
 
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logAnalyticsName
-}
-
-resource redisCache 'Microsoft.Cache/Redis@2019-07-01' existing = {
-  name: redisCacheName
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
@@ -81,7 +79,7 @@ resource azureFunction 'Microsoft.Web/sites@2020-12-01' = {
         {
           name: 'RedisConnectionString'
           type: 'Custom'
-          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.name, '2015-08-01').primaryKey}'
+          connectionString: '${redisCacheName}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCacheName, '2015-08-01').primaryKey}'
         }
       ]
       appSettings: [

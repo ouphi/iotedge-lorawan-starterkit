@@ -17,3 +17,5 @@ resource redisCache 'Microsoft.Cache/Redis@2019-07-01' = {
     }
   }
 }
+
+output redisCacheName string = redisCache.name

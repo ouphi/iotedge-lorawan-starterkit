@@ -1,4 +1,6 @@
+@description('Storage account name.')
 param storageAccountName string
+@description('Storage account type.')
 param storageAccountType string
 resource storageaccount 'Microsoft.Storage/storageAccounts@2015-06-15' = {
   name: storageAccountName

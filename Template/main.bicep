@@ -42,6 +42,7 @@ module function 'modules/function.bicep' = {
     uniqueSolutionPrefix: uniqueSolutionPrefix
     useAzureMonitorOnEdge:true
     hostingPlanLocation: location
+    redisCacheName: redisCache.outputs.redisCacheName
   }
   dependsOn: [
     iotHub
