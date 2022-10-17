@@ -6,7 +6,7 @@ param uniqueSolutionPrefix string
 
 var redisCacheName = '${uniqueSolutionPrefix}redis'
 
-resource redisCache 'Microsoft.Cache/Redis@2019-07-01' = {
+resource redisCache 'Microsoft.Cache/Redis@2022-06-01' = {
   location: location
   name: redisCacheName
   properties: {

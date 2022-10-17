@@ -46,17 +46,17 @@ resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
   name: iotHubName
 }
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
   name: logAnalyticsName
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' existing = {
   name: storageAccountName
 }
 
 // FUNCTION DEPLOYMENT RESOURCE
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2020-12-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: hostingPlanLocation
   sku: {
@@ -65,7 +65,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2020-12-01' = {
   }
 }
 
-resource azureFunction 'Microsoft.Web/sites@2020-12-01' = {
+resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
   name: functionName
   location: hostingPlanLocation
   kind: 'functionapp'

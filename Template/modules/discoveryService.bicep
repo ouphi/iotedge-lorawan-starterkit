@@ -21,7 +21,7 @@ resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
   name: iotHubName
 }
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2020-12-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: location
   sku: {
@@ -29,7 +29,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2020-12-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2021-03-01' = {
+resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
   properties: {
@@ -58,7 +58,7 @@ resource webApp 'Microsoft.Web/sites@2021-03-01' = {
   }
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: roleNameGuid
   scope: iotHub
   properties: {
