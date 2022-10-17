@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "16858374926208575791"
+      "templateHash": "12909756576086356745"
     }
   },
   "parameters": {
@@ -23,7 +23,7 @@
   "variables": {
     "iotHubName": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]",
     "storageAccountName": "[format('{0}storage', parameters('uniqueSolutionPrefix'))]",
-    "storageAccountType": "Standard_LRS",
+    "storageAccountType": "Storage",
     "credentialsContainerName": "stationcredentials",
     "firmwareUpgradesContainerName": "fwupgrades"
   },
@@ -108,15 +108,21 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "2179271130816552483"
+              "templateHash": "11654137920741961400"
             }
           },
           "parameters": {
             "storageAccountName": {
-              "type": "string"
+              "type": "string",
+              "metadata": {
+                "description": "Storage account name."
+              }
             },
             "storageAccountType": {
-              "type": "string"
+              "type": "string",
+              "metadata": {
+                "description": "Storage account type."
+              }
             },
             "credentialsContainerName": {
               "type": "string"
@@ -132,7 +138,7 @@
           "resources": [
             {
               "type": "Microsoft.Storage/storageAccounts",
-              "apiVersion": "2015-06-15",
+              "apiVersion": "2021-06-01",
               "name": "[parameters('storageAccountName')]",
               "location": "[resourceGroup().location]",
               "kind": "[parameters('storageAccountType')]",
@@ -142,7 +148,7 @@
             },
             {
               "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-              "apiVersion": "2021-06-01",
+              "apiVersion": "2022-05-01",
               "name": "[variables('FormattedCredentialsContainerName')]",
               "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
@@ -150,7 +156,7 @@
             },
             {
               "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-              "apiVersion": "2021-06-01",
+              "apiVersion": "2022-05-01",
               "name": "[variables('FormattedFirmwareUpgradesContainerName')]",
               "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"

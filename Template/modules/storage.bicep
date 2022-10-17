@@ -2,7 +2,7 @@
 param storageAccountName string
 @description('Storage account type.')
 param storageAccountType string
-resource storageaccount 'Microsoft.Storage/storageAccounts@2015-06-15' = {
+resource storageaccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
   name: storageAccountName
   location: resourceGroup().location
   kind: storageAccountType
@@ -13,7 +13,7 @@ resource storageaccount 'Microsoft.Storage/storageAccounts@2015-06-15' = {
 
 param credentialsContainerName string
 var FormattedCredentialsContainerName = '${storageAccountName}/default/${credentialsContainerName}'
-resource credentialscontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-06-01' = {
+resource credentialscontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = {
   name: FormattedCredentialsContainerName
   dependsOn: [
     storageaccount
@@ -22,7 +22,7 @@ resource credentialscontainer 'Microsoft.Storage/storageAccounts/blobServices/co
 
 param firmwareUpgradesContainerName string
 var FormattedFirmwareUpgradesContainerName = '${storageAccountName}/default/${firmwareUpgradesContainerName}'
-resource firwareupgradescontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-06-01' = {
+resource firwareupgradescontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = {
   name: FormattedFirmwareUpgradesContainerName
   dependsOn: [
     storageaccount

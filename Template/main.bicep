@@ -1,6 +1,6 @@
 var iotHubName = '${uniqueSolutionPrefix}hub'
 var storageAccountName = '${uniqueSolutionPrefix}storage'
-var storageAccountType = 'Standard_LRS'
+var storageAccountType = 'Storage'
 var credentialsContainerName = 'stationcredentials'
 var firmwareUpgradesContainerName = 'fwupgrades'
 
