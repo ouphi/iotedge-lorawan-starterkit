@@ -25,11 +25,13 @@ param version string = '2.1.0'
 @description('The name of the redis resource.')
 param redisCacheName string
 
+@description('The name of the iot hub resource.')
+param iotHubName string
+
 var appInsightName = '${uniqueSolutionPrefix}insight'
 var functionName = '${uniqueSolutionPrefix}function'
 var functionZipBinary = 'https://github.com/${gitUsername}/iotedge-lorawan-starterkit/releases/download/v${version}/function-${version}.zip'
 var hostingPlanName = '${uniqueSolutionPrefix}plan'
-var iotHubName = '${uniqueSolutionPrefix}hub'
 var iotHubOwnerPolicyName = 'iothubowner'
 var logAnalyticsName = '${uniqueSolutionPrefix}log'
 var storageAccountName = '${uniqueSolutionPrefix}storage'

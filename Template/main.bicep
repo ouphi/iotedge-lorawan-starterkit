@@ -1,4 +1,3 @@
-var iotHubName = '${uniqueSolutionPrefix}hub'
 var storageAccountName = '${uniqueSolutionPrefix}storage'
 var storageAccountType = 'Storage'
 var credentialsContainerName = 'stationcredentials'
@@ -9,9 +8,9 @@ param location string = resourceGroup().location
 param discoveryZipUrl string
 
 module iotHub 'modules/iothub.bicep' = {
-  name: 'iothub'
+  name: 'iotHub'
   params: {
-    iothubname: iotHubName
+    prefix: uniqueSolutionPrefix
     location: location
   }
 }
@@ -43,12 +42,8 @@ module function 'modules/function.bicep' = {
     useAzureMonitorOnEdge:true
     hostingPlanLocation: location
     redisCacheName: redisCache.outputs.redisCacheName
+    iotHubName: iotHub.outputs.iotHubName
   }
-  dependsOn: [
-    iotHub
-    storage
-    redisCache
-  ]
 }
 
 module discoveryService 'modules/discoveryService.bicep' = {
