@@ -54,7 +54,7 @@ module discoveryService 'modules/discoveryService.bicep' = {
     appInsightName: '${uniqueSolutionPrefix}insight'
     discoveryZipUrl: discoveryZipUrl
     iotHubHostName: reference(resourceId('Microsoft.Devices/IoTHubs', iotHubName), providers('Microsoft.Devices', 'IoTHubs').apiVersions[0]).hostName
-    iotHubName: '${uniqueSolutionPrefix}hub'
+    iotHubName: iotHub.outputs.iotHubName
     uniqueSolutionPrefix: uniqueSolutionPrefix
     location: location
   }

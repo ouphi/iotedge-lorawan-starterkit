@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "3555246402947151796"
+      "templateHash": "3409857620908076512"
     }
   },
   "parameters": {
@@ -507,7 +507,7 @@
             "value": "[reference(resourceId('Microsoft.Devices/IoTHubs', variables('iotHubName')), providers('Microsoft.Devices', 'IoTHubs').apiVersions[0]).hostName]"
           },
           "iotHubName": {
-            "value": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'iotHub')).outputs.iotHubName.value]"
           },
           "uniqueSolutionPrefix": {
             "value": "[parameters('uniqueSolutionPrefix')]"
@@ -620,7 +620,10 @@
             }
           ]
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'iotHub')]"
+      ]
     }
   ]
 }
