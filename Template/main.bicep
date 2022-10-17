@@ -2,6 +2,7 @@ var storageAccountName = '${uniqueSolutionPrefix}storage'
 var storageAccountType = 'Storage'
 var credentialsContainerName = 'stationcredentials'
 var firmwareUpgradesContainerName = 'fwupgrades'
+var iotHubName = '${uniqueSolutionPrefix}hub'
 
 param uniqueSolutionPrefix string
 param location string = resourceGroup().location
@@ -10,7 +11,7 @@ param discoveryZipUrl string
 module iotHub 'modules/iothub.bicep' = {
   name: 'iotHub'
   params: {
-    prefix: uniqueSolutionPrefix
+    name: iotHubName
     location: location
   }
 }
@@ -43,6 +44,7 @@ module function 'modules/function.bicep' = {
     hostingPlanLocation: location
     redisCacheName: redisCache.outputs.redisCacheName
     iotHubName: iotHub.outputs.iotHubName
+    storageAccountName: storage.outputs.storageAccountName
   }
 }
 

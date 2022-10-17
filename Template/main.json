@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "12909756576086356745"
+      "templateHash": "3555246402947151796"
     }
   },
   "parameters": {
@@ -21,24 +21,24 @@
     }
   },
   "variables": {
-    "iotHubName": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]",
     "storageAccountName": "[format('{0}storage', parameters('uniqueSolutionPrefix'))]",
     "storageAccountType": "Storage",
     "credentialsContainerName": "stationcredentials",
-    "firmwareUpgradesContainerName": "fwupgrades"
+    "firmwareUpgradesContainerName": "fwupgrades",
+    "iotHubName": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "name": "iothub",
+      "name": "iotHub",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
         },
         "mode": "Incremental",
         "parameters": {
-          "iothubname": {
+          "name": {
             "value": "[variables('iotHubName')]"
           },
           "location": {
@@ -52,11 +52,11 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "8957067887905768045"
+              "templateHash": "3201515198599049156"
             }
           },
           "parameters": {
-            "iothubname": {
+            "name": {
               "type": "string"
             },
             "location": {
@@ -67,14 +67,20 @@
             {
               "type": "Microsoft.Devices/IotHubs",
               "apiVersion": "2021-07-02",
-              "name": "[parameters('iothubname')]",
+              "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "sku": {
                 "capacity": 1,
                 "name": "S1"
               }
             }
-          ]
+          ],
+          "outputs": {
+            "iotHubName": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            }
+          }
         }
       }
     },
@@ -108,7 +114,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "11654137920741961400"
+              "templateHash": "33589513142111750"
             }
           },
           "parameters": {
@@ -138,7 +144,7 @@
           "resources": [
             {
               "type": "Microsoft.Storage/storageAccounts",
-              "apiVersion": "2021-06-01",
+              "apiVersion": "2022-05-01",
               "name": "[parameters('storageAccountName')]",
               "location": "[resourceGroup().location]",
               "kind": "[parameters('storageAccountType')]",
@@ -162,7 +168,13 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
               ]
             }
-          ]
+          ],
+          "outputs": {
+            "storageAccountName": {
+              "type": "string",
+              "value": "[parameters('storageAccountName')]"
+            }
+          }
         }
       }
     },
@@ -190,7 +202,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "15099354984355737295"
+              "templateHash": "2467296637881199132"
             }
           },
           "parameters": {
@@ -213,8 +225,8 @@
           },
           "resources": [
             {
-              "type": "Microsoft.Cache/Redis",
-              "apiVersion": "2019-07-01",
+              "type": "Microsoft.Cache/redis",
+              "apiVersion": "2022-06-01",
               "name": "[variables('redisCacheName')]",
               "location": "[parameters('location')]",
               "properties": {
@@ -259,6 +271,12 @@
           },
           "redisCacheName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'redisCache')).outputs.redisCacheName.value]"
+          },
+          "iotHubName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'iotHub')).outputs.iotHubName.value]"
+          },
+          "storageAccountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage')).outputs.storageAccountName.value]"
           }
         },
         "template": {
@@ -268,7 +286,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "4746985643410498726"
+              "templateHash": "12904667451697805285"
             }
           },
           "parameters": {
@@ -330,6 +348,18 @@
               "metadata": {
                 "description": "The name of the redis resource."
               }
+            },
+            "iotHubName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the iot hub resource."
+              }
+            },
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The storage account name."
+              }
             }
           },
           "variables": {
@@ -337,15 +367,13 @@
             "functionName": "[format('{0}function', parameters('uniqueSolutionPrefix'))]",
             "functionZipBinary": "[format('https://github.com/{0}/iotedge-lorawan-starterkit/releases/download/v{1}/function-{2}.zip', parameters('gitUsername'), parameters('version'), parameters('version'))]",
             "hostingPlanName": "[format('{0}plan', parameters('uniqueSolutionPrefix'))]",
-            "iotHubName": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]",
             "iotHubOwnerPolicyName": "iothubowner",
-            "logAnalyticsName": "[format('{0}log', parameters('uniqueSolutionPrefix'))]",
-            "storageAccountName": "[format('{0}storage', parameters('uniqueSolutionPrefix'))]"
+            "logAnalyticsName": "[format('{0}log', parameters('uniqueSolutionPrefix'))]"
           },
           "resources": [
             {
               "type": "Microsoft.Web/serverfarms",
-              "apiVersion": "2020-12-01",
+              "apiVersion": "2022-03-01",
               "name": "[variables('hostingPlanName')]",
               "location": "[parameters('hostingPlanLocation')]",
               "sku": {
@@ -355,7 +383,7 @@
             },
             {
               "type": "Microsoft.Web/sites",
-              "apiVersion": "2020-12-01",
+              "apiVersion": "2022-03-01",
               "name": "[variables('functionName')]",
               "location": "[parameters('hostingPlanLocation')]",
               "kind": "functionapp",
@@ -366,7 +394,7 @@
                     {
                       "name": "IoTHubConnectionString",
                       "type": "Custom",
-                      "connectionString": "[format('HostName={0}.azure-devices.net;SharedAccessKeyName={1};SharedAccessKey={2}', variables('iotHubName'), variables('iotHubOwnerPolicyName'), listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', variables('iotHubName'), variables('iotHubOwnerPolicyName')), '2017-01-19').primaryKey)]"
+                      "connectionString": "[format('HostName={0}.azure-devices.net;SharedAccessKeyName={1};SharedAccessKey={2}', parameters('iotHubName'), variables('iotHubOwnerPolicyName'), listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', parameters('iotHubName'), variables('iotHubOwnerPolicyName')), '2017-01-19').primaryKey)]"
                     },
                     {
                       "name": "RedisConnectionString",
@@ -377,15 +405,15 @@
                   "appSettings": [
                     {
                       "name": "AzureWebJobsDashboard",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
                     },
                     {
                       "name": "AzureWebJobsStorage",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
                     },
                     {
                       "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
                     },
                     {
                       "name": "WEBSITE_CONTENTSHARE",
@@ -425,7 +453,7 @@
                     },
                     {
                       "name": "IOT_HUB_RESOURCE_ID",
-                      "value": "[resourceId('Microsoft.Devices/IotHubs', variables('iotHubName'))]"
+                      "value": "[resourceId('Microsoft.Devices/IotHubs', parameters('iotHubName'))]"
                     },
                     {
                       "name": "LOG_ANALYTICS_WORKSPACE_ID",
@@ -454,7 +482,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'iothub')]",
+        "[resourceId('Microsoft.Resources/deployments', 'iotHub')]",
         "[resourceId('Microsoft.Resources/deployments', 'redisCache')]",
         "[resourceId('Microsoft.Resources/deployments', 'storage')]"
       ]
@@ -495,7 +523,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "17158052954577270212"
+              "templateHash": "16445089421244686378"
             }
           },
           "parameters": {
@@ -537,7 +565,7 @@
           "resources": [
             {
               "type": "Microsoft.Web/serverfarms",
-              "apiVersion": "2020-12-01",
+              "apiVersion": "2022-03-01",
               "name": "[variables('hostingPlanName')]",
               "location": "[parameters('location')]",
               "sku": {
@@ -546,7 +574,7 @@
             },
             {
               "type": "Microsoft.Web/sites",
-              "apiVersion": "2021-03-01",
+              "apiVersion": "2022-03-01",
               "name": "[variables('webAppName')]",
               "location": "[parameters('location')]",
               "properties": {
@@ -579,7 +607,7 @@
             },
             {
               "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2020-10-01-preview",
+              "apiVersion": "2022-04-01",
               "scope": "[format('Microsoft.Devices/IotHubs/{0}', parameters('iotHubName'))]",
               "name": "[parameters('roleNameGuid')]",
               "properties": {

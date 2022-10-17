@@ -28,13 +28,15 @@ param redisCacheName string
 @description('The name of the iot hub resource.')
 param iotHubName string
 
+@description('The storage account name.')
+param storageAccountName string
+
 var appInsightName = '${uniqueSolutionPrefix}insight'
 var functionName = '${uniqueSolutionPrefix}function'
 var functionZipBinary = 'https://github.com/${gitUsername}/iotedge-lorawan-starterkit/releases/download/v${version}/function-${version}.zip'
 var hostingPlanName = '${uniqueSolutionPrefix}plan'
 var iotHubOwnerPolicyName = 'iothubowner'
 var logAnalyticsName = '${uniqueSolutionPrefix}log'
-var storageAccountName = '${uniqueSolutionPrefix}storage'
 
 // RESOURCES DEPENDENCIES
 
