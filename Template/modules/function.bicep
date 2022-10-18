@@ -84,26 +84,26 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'IoTHubConnectionString'
           type: 'Custom'
-          connectionString:'HostName=${iotHub.name}.azure-devices.net;SharedAccessKeyName=${iotHubOwnerPolicyName};SharedAccessKey=${listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', iotHub.name, iotHubOwnerPolicyName), '2017-01-19').primaryKey}'
+          connectionString:'HostName=${iotHub.name}.azure-devices.net;SharedAccessKeyName=${iotHubOwnerPolicyName};SharedAccessKey=${listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', iotHub.name, iotHubOwnerPolicyName), '2021-07-02').primaryKey}'
         }
         {
           name: 'RedisConnectionString'
           type: 'Custom'
-          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.id, '2015-08-01').primaryKey}'
+          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.id, '2022-06-01').primaryKey}'
         }
       ]
       appSettings: [
         {
           name: 'AzureWebJobsDashboard'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2019-06-01').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2022-05-01').keys[0].value}'
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2019-06-01').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2022-05-01').keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2019-06-01').key1}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2022-05-01').keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTSHARE'
@@ -151,7 +151,7 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'LOG_ANALYTICS_WORKSPACE_KEY'
-          value: useAzureMonitorOnEdge ? listKeys(logAnalytics.id, '2021-06-01').primarySharedKey : ''
+          value: useAzureMonitorOnEdge ? listKeys(logAnalytics.id, '2022-10-01').primarySharedKey : ''
         }
         {
           name: 'EU863_CONFIG_LOCATION'

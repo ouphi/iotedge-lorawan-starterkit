@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "12961264281058888402"
+      "templateHash": "4245031823027741455"
     }
   },
   "parameters": {
@@ -291,7 +291,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "18318146610421200502"
+              "templateHash": "16656595661060741585"
             }
           },
           "parameters": {
@@ -408,21 +408,21 @@
                     {
                       "name": "RedisConnectionString",
                       "type": "Custom",
-                      "connectionString": "[format('{0}.redis.cache.windows.net,abortConnect=false,ssl=true,password={1}', parameters('redisCacheName'), listKeys(resourceId('Microsoft.Cache/redis', parameters('redisCacheName')), '2015-08-01').primaryKey)]"
+                      "connectionString": "[format('{0}.redis.cache.windows.net,abortConnect=false,ssl=true,password={1}', parameters('redisCacheName'), listKeys(resourceId('Microsoft.Cache/redis', parameters('redisCacheName')), '2022-06-01').primaryKey)]"
                     }
                   ],
                   "appSettings": [
                     {
                       "name": "AzureWebJobsDashboard",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').keys[0].value)]"
                     },
                     {
                       "name": "AzureWebJobsStorage",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').keys[0].value)]"
                     },
                     {
                       "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').key1)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').keys[0].value)]"
                     },
                     {
                       "name": "WEBSITE_CONTENTSHARE",
@@ -470,7 +470,7 @@
                     },
                     {
                       "name": "LOG_ANALYTICS_WORKSPACE_KEY",
-                      "value": "[if(parameters('useAzureMonitorOnEdge'), listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2021-06-01').primarySharedKey, '')]"
+                      "value": "[if(parameters('useAzureMonitorOnEdge'), listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2022-10-01').primarySharedKey, '')]"
                     },
                     {
                       "name": "EU863_CONFIG_LOCATION",
