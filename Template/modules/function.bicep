@@ -147,7 +147,7 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'LOG_ANALYTICS_WORKSPACE_ID'
-          value: useAzureMonitorOnEdge ? reference(logAnalytics.id).customerId : ''
+          value: (useAzureMonitorOnEdge ? logAnalytics.properties.customerId : '')
         }
         {
           name: 'LOG_ANALYTICS_WORKSPACE_KEY'
