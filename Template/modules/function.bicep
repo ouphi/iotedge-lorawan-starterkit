@@ -33,7 +33,8 @@ param storageAccountName string
 
 param logAnalyticsName string
 
-var appInsightName = '${uniqueSolutionPrefix}insight'
+param appInsightName string
+
 var functionName = '${uniqueSolutionPrefix}function'
 var functionZipBinary = 'https://github.com/${gitUsername}/iotedge-lorawan-starterkit/releases/download/v${version}/function-${version}.zip'
 var hostingPlanName = '${uniqueSolutionPrefix}plan'

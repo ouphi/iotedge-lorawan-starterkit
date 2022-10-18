@@ -6,7 +6,7 @@ resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
   name: iotHubName
 }
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: '${prefix}analytics'
   location: location
   properties: {

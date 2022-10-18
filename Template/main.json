@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "16754508417953100961"
+      "templateHash": "4158900518037648387"
     }
   },
   "parameters": {
@@ -181,7 +181,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "name": "[format('{0}redis', parameters('uniqueSolutionPrefix'))]",
+      "name": "redisCache",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -256,6 +256,9 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "appInsightName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'observability')).outputs.appInsightName.value]"
+          },
           "logAnalyticsName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'observability')).outputs.logAnalyticName.value]"
           },
@@ -272,7 +275,7 @@
             "value": "[parameters('location')]"
           },
           "redisCacheName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('{0}redis', parameters('uniqueSolutionPrefix')))).outputs.redisCacheName.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'redisCache')).outputs.redisCacheName.value]"
           },
           "iotHubName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'iotHub')).outputs.iotHubName.value]"
@@ -288,7 +291,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "4707571571101159098"
+              "templateHash": "18318146610421200502"
             }
           },
           "parameters": {
@@ -365,10 +368,12 @@
             },
             "logAnalyticsName": {
               "type": "string"
+            },
+            "appInsightName": {
+              "type": "string"
             }
           },
           "variables": {
-            "appInsightName": "[format('{0}insight', parameters('uniqueSolutionPrefix'))]",
             "functionName": "[format('{0}function', parameters('uniqueSolutionPrefix'))]",
             "functionZipBinary": "[format('https://github.com/{0}/iotedge-lorawan-starterkit/releases/download/v{1}/function-{2}.zip', parameters('gitUsername'), parameters('version'), parameters('version'))]",
             "hostingPlanName": "[format('{0}plan', parameters('uniqueSolutionPrefix'))]",
@@ -445,7 +450,7 @@
                     },
                     {
                       "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                      "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightName')), '2015-05-01').InstrumentationKey]"
+                      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightName')), '2015-05-01').InstrumentationKey]"
                     },
                     {
                       "name": "WEBSITE_RUN_FROM_PACKAGE",
@@ -488,7 +493,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'iotHub')]",
         "[resourceId('Microsoft.Resources/deployments', 'observability')]",
-        "[resourceId('Microsoft.Resources/deployments', format('{0}redis', parameters('uniqueSolutionPrefix')))]",
+        "[resourceId('Microsoft.Resources/deployments', 'redisCache')]",
         "[resourceId('Microsoft.Resources/deployments', 'storage')]"
       ]
     },
@@ -519,7 +524,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "131056863950797233"
+              "templateHash": "447456025276052822"
             }
           },
           "parameters": {
@@ -536,7 +541,7 @@
           "resources": [
             {
               "type": "Microsoft.OperationalInsights/workspaces",
-              "apiVersion": "2021-06-01",
+              "apiVersion": "2022-10-01",
               "name": "[format('{0}analytics', parameters('prefix'))]",
               "location": "[parameters('location')]",
               "properties": {
