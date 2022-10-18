@@ -31,17 +31,22 @@ param iotHubName string
 @description('The storage account name.')
 param storageAccountName string
 
+param logAnalyticsName string
+
 var appInsightName = '${uniqueSolutionPrefix}insight'
 var functionName = '${uniqueSolutionPrefix}function'
 var functionZipBinary = 'https://github.com/${gitUsername}/iotedge-lorawan-starterkit/releases/download/v${version}/function-${version}.zip'
 var hostingPlanName = '${uniqueSolutionPrefix}plan'
 var iotHubOwnerPolicyName = 'iothubowner'
-var logAnalyticsName = '${uniqueSolutionPrefix}log'
 
 // RESOURCES DEPENDENCIES
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightName
+}
+
+resource redisCache 'Microsoft.Cache/redis@2022-06-01' existing = {
+  name: redisCacheName
 }
 
 resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
@@ -83,7 +88,7 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'RedisConnectionString'
           type: 'Custom'
-          connectionString: '${redisCacheName}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCacheName, '2015-08-01').primaryKey}'
+          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.id, '2015-08-01').primaryKey}'
         }
       ]
       appSettings: [

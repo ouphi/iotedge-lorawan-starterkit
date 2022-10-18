@@ -56,15 +56,17 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
       webSocketsEnabled: true
     }
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
 }
 
-/*resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: roleNameGuid
   scope: iotHub
   properties: {
-    principalId: reference(webApp.id, webSitesApiVersion, 'Full').identity.principalId
-    //[reference(resourceId('<subscriptionId>','<resourceGroupName>','Microsoft.ManagedIdentity/userAssignedIdentities', parameters('name')),'2018-11-30','Full').properties.principalId]
+    principalId: webApp.identity.principalId
     roleDefinitionId: iotHubTwinContributorRoleId
   }
-}*/
+}
 

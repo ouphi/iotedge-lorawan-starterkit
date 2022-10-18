@@ -1,5 +1,5 @@
 @description('The Azure location where to create the hosting plan. Default value is resource group location.')
-param location string = resourceGroup().location
+param location string
 
 @description('Prefix used for resource names. Should be unique as this will also be used for domain names.')
 param uniqueSolutionPrefix string

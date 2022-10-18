@@ -29,7 +29,7 @@ module storage 'modules/storage.bicep' = {
 }
 
 module redisCache 'modules/redis.bicep' = {
-  name: 'redisCache'
+  name: '${uniqueSolutionPrefix}redis'
   params: {
     uniqueSolutionPrefix: uniqueSolutionPrefix
     location: location
@@ -39,6 +39,7 @@ module redisCache 'modules/redis.bicep' = {
 module function 'modules/function.bicep' = {
   name: 'function'
   params: {
+    logAnalyticsName: observability.outputs.logAnalyticName
     deployDevice: true
     uniqueSolutionPrefix: uniqueSolutionPrefix
     useAzureMonitorOnEdge: true
