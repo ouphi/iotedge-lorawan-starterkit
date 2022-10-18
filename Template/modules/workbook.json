@@ -29,7 +29,7 @@
     },
     "workbookId": {
       "type": "string",
-      "defaultValue": "[newGuid()]",
+      "defaultValue": "[guid(parameters('workbookDisplayName'))]",
       "metadata": {
         "description": "The unique guid for this workbook instance"
       }

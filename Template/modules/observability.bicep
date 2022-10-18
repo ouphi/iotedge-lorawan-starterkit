@@ -17,6 +17,9 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
     workspaceCapping: {
       dailyQuotaGb: 10
     }
+    features: {
+      searchVersion: 1
+    }
   }
 }
 
