@@ -29,5 +29,4 @@ resource firwareupgradescontainer 'Microsoft.Storage/storageAccounts/blobService
   ]
 }
 
-
 output storageAccountName string = storageaccount.name

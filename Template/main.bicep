@@ -41,7 +41,7 @@ module function 'modules/function.bicep' = {
   params: {
     deployDevice: true
     uniqueSolutionPrefix: uniqueSolutionPrefix
-    useAzureMonitorOnEdge:true
+    useAzureMonitorOnEdge: true
     hostingPlanLocation: location
     redisCacheName: redisCache.outputs.redisCacheName
     iotHubName: iotHub.outputs.iotHubName
@@ -49,10 +49,19 @@ module function 'modules/function.bicep' = {
   }
 }
 
+module observability 'modules/observability.bicep' = {
+  name: 'observability'
+  params: {
+    prefix: uniqueSolutionPrefix
+    iotHubName: iotHub.outputs.iotHubName
+    location: location
+  }
+}
+
 module discoveryService 'modules/discoveryService.bicep' = {
   name: 'discoveryService'
   params: {
-    appInsightName: '${uniqueSolutionPrefix}insight'
+    appInsightName: observability.outputs.appInsightName
     discoveryZipUrl: discoveryZipUrl
     iotHubHostName: reference(resourceId('Microsoft.Devices/IoTHubs', iotHubName), providers('Microsoft.Devices', 'IoTHubs').apiVersions[0]).hostName
     iotHubName: iotHub.outputs.iotHubName
@@ -61,6 +70,3 @@ module discoveryService 'modules/discoveryService.bicep' = {
   }
 }
 
-module observability 'modules/observability.bicep' = {
-
-}
