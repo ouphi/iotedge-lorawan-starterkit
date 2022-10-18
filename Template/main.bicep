@@ -1,6 +1,6 @@
 
 var storageAccountName = '${uniqueSolutionPrefix}storage'
-var storageAccountType = 'Storage'
+var storageAccountType = 'StorageV2'
 var credentialsContainerName = 'stationcredentials'
 var firmwareUpgradesContainerName = 'fwupgrades'
 var iotHubName = '${uniqueSolutionPrefix}hub'

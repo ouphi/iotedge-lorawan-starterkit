@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "4245031823027741455"
+      "templateHash": "16439668030888885084"
     }
   },
   "parameters": {
@@ -22,7 +22,7 @@
   },
   "variables": {
     "storageAccountName": "[format('{0}storage', parameters('uniqueSolutionPrefix'))]",
-    "storageAccountType": "Storage",
+    "storageAccountType": "StorageV2",
     "credentialsContainerName": "stationcredentials",
     "firmwareUpgradesContainerName": "fwupgrades",
     "iotHubName": "[format('{0}hub', parameters('uniqueSolutionPrefix'))]"
@@ -114,7 +114,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "33589513142111750"
+              "templateHash": "12611313663077947428"
             }
           },
           "parameters": {
@@ -149,7 +149,7 @@
               "location": "[resourceGroup().location]",
               "kind": "[parameters('storageAccountType')]",
               "sku": {
-                "name": "Premium_LRS"
+                "name": "Standard_LRS"
               }
             },
             {
@@ -291,7 +291,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "16656595661060741585"
+              "templateHash": "4493526261038881422"
             }
           },
           "parameters": {
@@ -403,7 +403,7 @@
                     {
                       "name": "IoTHubConnectionString",
                       "type": "Custom",
-                      "connectionString": "[format('HostName={0}.azure-devices.net;SharedAccessKeyName={1};SharedAccessKey={2}', parameters('iotHubName'), variables('iotHubOwnerPolicyName'), listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', parameters('iotHubName'), variables('iotHubOwnerPolicyName')), '2017-01-19').primaryKey)]"
+                      "connectionString": "[format('HostName={0}.azure-devices.net;SharedAccessKeyName={1};SharedAccessKey={2}', parameters('iotHubName'), variables('iotHubOwnerPolicyName'), listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', parameters('iotHubName'), variables('iotHubOwnerPolicyName')), '2021-07-02').primaryKey)]"
                     },
                     {
                       "name": "RedisConnectionString",
@@ -414,11 +414,15 @@
                   "appSettings": [
                     {
                       "name": "AzureWebJobsDashboard",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').keys[0].value)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]"
                     },
                     {
                       "name": "AzureWebJobsStorage",
-                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').keys[0].value)]"
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]"
+                    },
+                    {
+                      "name": "AzureWebJobsSecretStorageType",
+                      "value": "Files"
                     },
                     {
                       "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
@@ -466,7 +470,7 @@
                     },
                     {
                       "name": "LOG_ANALYTICS_WORKSPACE_ID",
-                      "value": "[if(parameters('useAzureMonitorOnEdge'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))).customerId, '')]"
+                      "value": "[if(parameters('useAzureMonitorOnEdge'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2022-10-01').customerId, '')]"
                     },
                     {
                       "name": "LOG_ANALYTICS_WORKSPACE_KEY",

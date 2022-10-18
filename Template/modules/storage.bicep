@@ -2,12 +2,13 @@
 param storageAccountName string
 @description('Storage account type.')
 param storageAccountType string
+
 resource storageaccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: resourceGroup().location
   kind: storageAccountType
   sku: {
-    name: 'Premium_LRS'
+    name: 'Standard_LRS'
   }
 }
 
