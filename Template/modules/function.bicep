@@ -31,8 +31,10 @@ param iotHubName string
 @description('The storage account name.')
 param storageAccountName string
 
+@description('The log analytics workspace name.')
 param logAnalyticsName string
 
+@description('The application insights name.')
 param appInsightName string
 
 var functionName = '${uniqueSolutionPrefix}function'
@@ -84,22 +86,22 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'IoTHubConnectionString'
           type: 'Custom'
-          connectionString:'HostName=${iotHub.name}.azure-devices.net;SharedAccessKeyName=${iotHubOwnerPolicyName};SharedAccessKey=${listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', iotHub.name, iotHubOwnerPolicyName), '2021-07-02').primaryKey}'
+          connectionString:'HostName=${iotHub.name}.azure-devices.net;SharedAccessKeyName=${iotHubOwnerPolicyName};SharedAccessKey=${listKeys(resourceId('Microsoft.Devices/IotHubs/IotHubKeys', iotHub.name, iotHubOwnerPolicyName), iotHub.apiVersion).primaryKey}'
         }
         {
           name: 'RedisConnectionString'
           type: 'Custom'
-          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.id, '2022-06-01').primaryKey}'
+          connectionString: '${redisCache.name}.redis.cache.windows.net,abortConnect=false,ssl=true,password=${listKeys(redisCache.id, redisCache.apiVersion).primaryKey}'
         }
       ]
       appSettings: [
         {
           name: 'AzureWebJobsDashboard'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2019-06-01').keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2019-06-01').keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
         {
           name: 'AzureWebJobsSecretStorageType'
@@ -107,7 +109,7 @@ resource azureFunction 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, '2022-05-01').keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTSHARE'
