@@ -50,7 +50,7 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: reference(appInsights.id, '2015-05-01').InstrumentationKey
+          value: reference(appInsights.id, appInsights.apiVersion).InstrumentationKey
         }
       ]
       webSocketsEnabled: true
@@ -67,6 +67,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   properties: {
     principalId: webApp.identity.principalId
     roleDefinitionId: iotHubTwinContributorRoleId
+    principalType: 'ServicePrincipal'
   }
 }
 
