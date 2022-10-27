@@ -57,12 +57,12 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release v$VERSION 
-          tag_name: v$VERSION
+          name: Release v${{ env.VERSION }} 
+          tag_name: v${{ env.VERSION }}
           body_path: release_description.txt
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            function-$VERSION.zip
-            discoveryservice-${VERSION}.beta1.zip
+            function-${{ env.VERSION }}.zip
+            discoveryservice-${{ env.VERSION }}.beta1.zip
     needs: BuildAndPushDockerImages
     
