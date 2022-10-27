@@ -54,7 +54,6 @@ jobs:
           PUBLISH_FOLDER=LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/bin/Release/net6.0/publish
           PUBLISH_ZIP=discoveryservice-${VERSION}.beta1.zip
           zip -r $PUBLISH_ZIP $PUBLISH_FOLDER
-      - name: Create tag
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -66,3 +65,4 @@ jobs:
             function-$VERSION.zip
             discoveryservice-${VERSION}.beta1.zip
     needs: BuildAndPushDockerImages
+    
