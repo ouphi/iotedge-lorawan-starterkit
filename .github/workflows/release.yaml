@@ -7,10 +7,10 @@ on:
         description: 'Release tag'
         required: true
 jobs:
+  env:
+    ORGANISATION: "ouphi"
+    VERSION: ${{ inputs.releaseTag }}
   BuildAndPushDockerImages:
-    env:
-      ORGANISATION: "ouphi"
-      VERSION: ${{ inputs.releaseTag }}
     strategy:
       matrix:
         image:
