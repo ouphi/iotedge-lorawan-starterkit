@@ -4,3 +4,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  build_docker_images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 
+      - uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          install: true
+      - name: Build and push docker images
+        run: |
+          docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker buildx build --rm -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.amd64" -t "$ORGANISATION/lorawannetworksrvmodule:$VERSION-amd64" --output type=image,push=true "."
+        env:
+          ORGANISATION: "ouphi"
+          VERSION: "2.2.0"
+      
