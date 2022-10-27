@@ -6,10 +6,12 @@ on:
       releaseTag:
         description: 'Release tag'
         required: true
+
+env:
+  ORGANISATION: "ouphi"
+  VERSION: ${{ inputs.releaseTag }}
+
 jobs:
-  env:
-    ORGANISATION: "ouphi"
-    VERSION: ${{ inputs.releaseTag }}
   BuildAndPushDockerImages:
     strategy:
       matrix:
@@ -57,7 +59,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release v${{ env.VERSION }} 
+          name: Release ${{ env.VERSION }} 
           tag_name: v${{ env.VERSION }}
           body_path: release_description.txt
           token: ${{ secrets.GITHUB_TOKEN }}
