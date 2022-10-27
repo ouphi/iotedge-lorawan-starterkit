@@ -12,13 +12,21 @@ jobs:
         id: buildx
         with:
           install: true
-      - name: Build and push docker images
+      - name: Login to docker hub
         run: |
           docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push images
+        run: |
           docker buildx build --rm -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.amd64" -t $ORGANISATION/lorawannetworksrvmodule:$VERSION-amd64 --output type=image,push=true "."
-          docker build  --rm -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.amd64" -t $ORGANISATION/lorabasicsstationmodule:$VERSION-amd64 --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "."
-          docker build  --rm -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.arm32v7" -t $ORGANISATION/lorawannetworksrvmodule:$VERSION-arm32v7 --output type=image,push=true "."
-          docker build  --rm -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.arm32v7" -t $ORGANISATION/lorabasicsstationmodule:$VERSION-arm32v7 --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "." 
+          docker buildx build --rm -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.amd64" -t $ORGANISATION/lorabasicsstationmodule:$VERSION-amd64 --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "."
+          docker buildx build --rm -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.arm32v7" -t $ORGANISATION/lorawannetworksrvmodule:$VERSION-arm32v7 --output type=image,push=true "."
+          docker buildx build --rm -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.arm32v7" -t $ORGANISATION/lorabasicsstationmodule:$VERSION-arm32v7 --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "."
+      - name: Create manifests
+        run: |
+          docker manifest create  $ORGANISATION/lorawannetworksrvmodule:$VERSION $ORGANISATION/lorawannetworksrvmodule:$VERSION-arm32v7 $ORGANISATION/lorawannetworksrvmodule:$VERSION-amd64 --amend 
+          docker manifest create  loraedge/lorabasicsstationmodule:$VERSION $ORGANISATION/lorabasicsstationmodule:$VERSION-arm32v7 loraedge/lorabasicsstationmodule:$VERSION-amd64 --amend
+          docker manifest push $ORGANISATION/lorabasicsstationmodule:$VERSION  
+          docker manifest push $ORGANISATION/lorawannetworksrvmodule:$VERSION 
         env:
           ORGANISATION: "ouphi"
           VERSION: "2.2.0"
