@@ -2,12 +2,15 @@ name: Release
 
 on:
   workflow_dispatch:
-
+    inputs:
+      releaseTag:
+        description: 'Release tag'
+        required: true
 jobs:
   BuildAndPushDockerImages:
     env:
       ORGANISATION: "ouphi"
-      VERSION: "2.2.0"
+      VERSION: ${{ inputs.releaseTag }}
     strategy:
       matrix:
         image:
