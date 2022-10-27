@@ -37,3 +37,32 @@ jobs:
           docker manifest create $ORGANISATION/lorabasicsstationmodule:$VERSION $ORGANISATION/lorabasicsstationmodule:$VERSION-${{ matrix.image }} --amend
           docker manifest push $ORGANISATION/lorabasicsstationmodule:$VERSION
           docker manifest push $ORGANISATION/lorawannetworksrvmodule:$VERSION
+  CreateRelease:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Package Azure Function
+        run: |
+          dotnet publish LoRaEngine/LoraKeysManagerFacade -c Release
+          zip -r function-$VERSION.zip LoRaEngine/LoraKeysManagerFacade/bin/Release/net6.0
+          # TODO: Update function zip name in azuredeploy.json - Create a PR with updated version?
+      - name: Package Discovery Service
+        run: |
+          dotnet publish LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/LoRaWan.NetworkServerDiscovery.csproj -c Release
+          PUBLISH_FOLDER=LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/bin/Release/net6.0/publish
+          PUBLISH_ZIP=discoveryservice-${VERSION}.beta1.zip
+          zip -r $PUBLISH_ZIP $PUBLISH_FOLDER
+      - name: Create tag
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release v$VERSION 
+          tag_name: v$VERSION
+          body_path: release_description.txt
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            function-$VERSION.zip
+            discoveryservice-${VERSION}.beta1.zip
+    needs: BuildAndPushDockerImages
