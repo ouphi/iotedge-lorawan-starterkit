@@ -52,7 +52,7 @@ jobs:
         run: |
           BRANCH_NAME="docs/release-${VERSION}"
           sed -i "s/iotedge-lorawan-starterkit%2Fv[0-9\.]*/iotedge-lorawan-starterkit%2Fv${VERSION}/g" docs/quickstart.md
-          git add docs/quickstart.m
+          git add docs/quickstart.md
           git commit -m "Update button URL."
           git checkout -b $BRANCH_NAME
           git push --set-upstream origin $BRANCH_NAME
