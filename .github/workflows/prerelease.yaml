@@ -41,8 +41,8 @@ jobs:
     env:
       # If you are testing the workflow from a fork, you need to change this value to publish to another docker hub organization you have the rights to publish to.
       # You will also need to setup a DOCKER_LOGIN and DOCKER_PASSWORD Github Action secret.
-      DOCKERHUB_ORGANISATION: "ouphi"  
-
+      DOCKERHUB_ORGANISATION: ${{ secrets.DOCKER_REPOSITORY }}
+  
   CreateRelease:
     permissions:
       contents: write
@@ -71,7 +71,7 @@ jobs:
           az bicep build --file main.bicep --outfile $ARM_FILE
       - name: Compile provisioning CLI for different platform
         working-directory: Tools/Cli-LoRa-Device-Provisioning
-        shell: pwsh 
+        shell: pwsh
         run: pwsh BuildForRelease.ps1
       - name: Create Prerelease
         run: |
