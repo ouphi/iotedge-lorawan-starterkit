@@ -74,7 +74,7 @@ jobs:
           do
             dotnet publish -c Release -r $PLATFORM
             ZIP_NAME=device-provisioning-cli-$PLATFORM.zip
-            zip -r ZIP_NAME bin/Release/net6.0/osx-x64/publish/
+            zip -r $ZIP_NAME bin/Release/net6.0/osx-x64/publish/
             ZIP_VAR_NAME=$(echo "PROVISIONING_CLI_$PLATFORM" | tr '-' '_')
             echo "$ZIP_VAR_NAME=Tools/Cli-LoRa-Device-Provisioning/$ZIP_NAME" >> $GITHUB_ENV
           done
