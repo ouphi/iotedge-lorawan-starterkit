@@ -50,12 +50,18 @@ jobs:
       - name: Package Azure Function
         run: |
           dotnet publish LoRaEngine/LoraKeysManagerFacade -c Release
+          FUNCTION_ZIP=function-${VERSION}.zip
           zip -r $FUNCTION_ZIP LoRaEngine/LoraKeysManagerFacade/bin/Release/net6.0
+          # Define FUNCTION_ZIP env var for next steps.
+          echo "FUNCTION_ZIP=$FUNCTION_ZIP" >> $GITHUB_ENV
       - name: Package Discovery Service
         run: |
           dotnet publish LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/LoRaWan.NetworkServerDiscovery.csproj -c Release
           PUBLISH_FOLDER=LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/bin/Release/net6.0/publish
+          DISCOVERY_SERVICE_ZIP=discoveryservice-${VERSION}.beta1.zip
           zip -r $DISCOVERY_SERVICE_ZIP $PUBLISH_FOLDER
+          # Define DISCOVERY_SERVICE_ZIP env var for next steps.
+          echo "DISCOVERY_SERVICE_ZIP=$DISCOVERY_SERVICE_ZIP" >> $GITHUB_ENV
       - name: Generate ARM file
         working-directory: TemplateBicep
         run: |
@@ -71,6 +77,3 @@ jobs:
     #needs: BuildAndPushDockerImages
     env:
       ARM_FILE: azuredeploy.json
-      FUNCTION_ZIP: function-${{ env.VERSION }}.zip
-      DISCOVERY_SERVICE_ZIP: discoveryservice-${{ env.VERSION }}.beta1.zip
-    
