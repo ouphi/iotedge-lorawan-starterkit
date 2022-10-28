@@ -69,11 +69,21 @@ jobs:
           az bicep build --file main.bicep --outfile $ARM_FILE
       - name: Compile provisioning CLI
         run: |
-          
+          working-directory: Tools/Cli-LoRa-Device-Provisioning
+          for PLATFORM in win10-x64 linux-x64 osx-x64
+          do
+            dotnet publish -c Release -r $PLATFORM
+            ZIP_NAME=device-provisioning-cli-$PLATFORM.zip
+            zip -r ZIP_NAME bin/Release/net6.0/osx-x64/publish/
+            ZIP_VAR_NAME=$(echo "PROVISIONING_CLI_$PLATFORM" | tr '-' '_')
+            echo "$ZIP_VAR_NAME=Tools/Cli-LoRa-Device-Provisioning/$ZIP_NAME" >> $GITHUB_ENV
+          done
       - name: Release
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-          gh release create v$VERSION TemplateBicep/$ARM_FILE $FUNCTION_ZIP $DISCOVERY_SERVICE_ZIP --title "Release v$VERSION" --prerelease --repo ${{ github.repository }} --notes ""
+          gh release create v$VERSION TemplateBicep/$ARM_FILE $FUNCTION_ZIP $DISCOVERY_SERVICE_ZIP \
+             $PROVISIONING_CLI_win10_x64 $PROVISIONING_CLI_linux_x64 $PROVISIONING_CLI_osx_x64 \
+            --title "Release v$VERSION" --prerelease --repo ${{ github.repository }} --notes ""
     #needs: BuildAndPushDockerImages
     env:
       ARM_FILE: azuredeploy.json
