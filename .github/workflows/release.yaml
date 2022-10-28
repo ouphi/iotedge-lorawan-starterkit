@@ -57,6 +57,7 @@ jobs:
           PUBLISH_FOLDER=LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/bin/Release/net6.0/publish
           zip -r $DISCOVERY_SERVICE_ZIP $PUBLISH_FOLDER
       - name: Generate ARM file
+        working-directory: TemplateBicep
         run: |
           az bicep build --file main.bicep
           az bicep build --file main.bicep --outfile $ARM_FILE
