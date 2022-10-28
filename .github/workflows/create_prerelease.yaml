@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Update the default LoRaWAN Starter Kit version to use in Bicep.
-        run: sed -i '' "s/param version string = '[0-9/.]*'/param version string = '${VERSION}'/g" TemplateBicep/main.bicep
+        run: sed -i "s/param version string = '[0-9/.]*'/param version string = '${VERSION}'/g" TemplateBicep/main.bicep
       - name: Set up git user using the built-in token
         run: |
           git config user.name github-actions
