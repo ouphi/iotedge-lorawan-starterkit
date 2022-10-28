@@ -79,7 +79,7 @@ jobs:
           git config user.email github-actions@github.com
       - name: Create branch
         run: |
-          BRANCH_NAME="feature/update-default-version${VERSION}-${{ github.run_id }}"
+          BRANCH_NAME="feature/update-version-${VERSION}-${{ github.run_id }}"
           DESCRIPTION="Update the default LoRaWAN Starter Kit version to use in Bicep with version $VERSION."
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           git add TemplateBicep/main.bicep
