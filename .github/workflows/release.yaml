@@ -67,22 +67,18 @@ jobs:
         run: |
           az bicep build --file main.bicep
           az bicep build --file main.bicep --outfile $ARM_FILE
-      - name: Compile provisioning CLI
+      - name: Compile provisioning CLI for different platform
         working-directory: Tools/Cli-LoRa-Device-Provisioning
-        run: |
-          for PLATFORM in win10-x64 linux-x64 osx-x64
-          do
-            dotnet publish -c Release -r $PLATFORM
-            ZIP_NAME=device-provisioning-cli-$PLATFORM.zip
-            zip -r $ZIP_NAME bin/Release/net6.0/$PLATFORM/publish/
-            ZIP_VAR_NAME=$(echo "PROVISIONING_CLI_$PLATFORM" | tr '-' '_')
-            echo "$ZIP_VAR_NAME=Tools/Cli-LoRa-Device-Provisioning/$ZIP_NAME" >> $GITHUB_ENV
-          done
+        shell: pwsh 
+        run: pwsh BuildForRelease.ps1
       - name: Release
-        run: |
+        run: | #\bin\Release\$DotNetVersion\osx-x64\lora-cli.osx-x64.zip
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
           gh release create v$VERSION TemplateBicep/$ARM_FILE $FUNCTION_ZIP $DISCOVERY_SERVICE_ZIP \
-             $PROVISIONING_CLI_win10_x64 $PROVISIONING_CLI_linux_x64 $PROVISIONING_CLI_osx_x64 \
+          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/linux-x64/lora-cli.linux-x64.tar.gz \
+          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/linux-musl-x64/lora-cli.linux-musl-x64.tar.gz \
+          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/win-x64/lora-cli.win-x64.zip \
+          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/osx-x64/lora-cli.osx-x64.zip \
             --title "Release v$VERSION" --prerelease --repo ${{ github.repository }} --notes ""
     #needs: BuildAndPushDockerImages
     env:
