@@ -76,11 +76,12 @@ jobs:
       - name: Create pre-release
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          CLI_RELEASE_PATH=Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/
           gh release create v$VERSION TemplateBicep/$ARM_FILE $FUNCTION_ZIP $DISCOVERY_SERVICE_ZIP \
-          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/linux-x64/lora-cli.linux-x64.tar.gz \
-          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/linux-musl-x64/lora-cli.linux-musl-x64.tar.gz \
-          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/win-x64/lora-cli.win-x64.zip \
-          Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/osx-x64/lora-cli.osx-x64.zip \
+          $CLI_RELEASE_PATH/linux-x64/lora-cli.linux-x64.tar.gz \
+          $CLI_RELEASE_PATH/linux-musl-x64/lora-cli.linux-musl-x64.tar.gz \
+          $CLI_RELEASE_PATH/win-x64/lora-cli.win-x64.zip \
+          $CLI_RELEASE_PATH/osx-x64/lora-cli.osx-x64.zip \
             --title "Release v$VERSION" --prerelease --repo ${{ github.repository }} --notes ""
     needs: BuildAndPushDockerImages
     env:
