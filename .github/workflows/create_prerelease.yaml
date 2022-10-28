@@ -46,12 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        #with:
-        #  token: ${{ github.token }}
-        #  ref: docs/main
+        with:
+          ref: docs/main
       - name: Create branch
         run: |
-          git checkout docs/main
           BRANCH_NAME="docs/release-${VERSION}"
           sed -i '' "s/iotedge-lorawan-starterkit%2Fv[0-9\.]*/iotedge-lorawan-starterkit%2Fv${VERSION}/g" docs/quickstart.m
           git add docs/quickstart.m
