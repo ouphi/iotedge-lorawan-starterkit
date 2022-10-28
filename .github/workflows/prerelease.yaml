@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       releaseTag:
-        description: 'Release tag'
+        description: 'Release tag. The release tag should be a version, for example 2.0.0.'
         required: true
 
 env:
@@ -73,7 +73,7 @@ jobs:
         working-directory: Tools/Cli-LoRa-Device-Provisioning
         shell: pwsh 
         run: pwsh BuildForRelease.ps1
-      - name: Create pre-release
+      - name: Create Prerelease
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
           CLI_RELEASE_PATH=Tools/Cli-LoRa-Device-Provisioning/bin/Release/net6.0/
