@@ -68,8 +68,8 @@ jobs:
           az bicep build --file main.bicep
           az bicep build --file main.bicep --outfile $ARM_FILE
       - name: Compile provisioning CLI
+        working-directory: Tools/Cli-LoRa-Device-Provisioning
         run: |
-          working-directory: Tools/Cli-LoRa-Device-Provisioning
           for PLATFORM in win10-x64 linux-x64 osx-x64
           do
             dotnet publish -c Release -r $PLATFORM
