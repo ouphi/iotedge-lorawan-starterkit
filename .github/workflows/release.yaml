@@ -8,7 +8,6 @@ on:
         required: true
 
 env:
-  ORGANISATION: "ouphi"
   VERSION: ${{ inputs.releaseTag }}
 
 jobs:
@@ -31,14 +30,17 @@ jobs:
           docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and push images
         run: |
-          docker buildx build -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.${{ matrix.image }}" -t $ORGANISATION/lorawannetworksrvmodule:$VERSION-${{ matrix.image }} --output type=image,push=true "."
-          docker buildx build -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.${{ matrix.image }}" -t $ORGANISATION/lorabasicsstationmodule:$VERSION-${{ matrix.image }} --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "."
+          docker buildx build -f "./LoRaEngine/modules/LoRaWanNetworkSrvModule/Dockerfile.${{ matrix.image }}" -t DOCKERHUB_ORGANISATION/lorawannetworksrvmodule:$VERSION-${{ matrix.image }} --output type=image,push=true "."
+          docker buildx build -f "./LoRaEngine/modules/LoRaBasicsStationModule/Dockerfile.${{ matrix.image }}" -t DOCKERHUB_ORGANISATION/lorabasicsstationmodule:$VERSION-${{ matrix.image }} --build-arg SOURCE_CONTAINER_REGISTRY_ADDRESS=docker.io --output type=image,push=true "."
       - name: Create manifests
         run: |
-          docker manifest create $ORGANISATION/lorawannetworksrvmodule:$VERSION $ORGANISATION/lorawannetworksrvmodule:$VERSION-${{ matrix.image }} --amend
-          docker manifest create $ORGANISATION/lorabasicsstationmodule:$VERSION $ORGANISATION/lorabasicsstationmodule:$VERSION-${{ matrix.image }} --amend
-          docker manifest push $ORGANISATION/lorabasicsstationmodule:$VERSION
-          docker manifest push $ORGANISATION/lorawannetworksrvmodule:$VERSION
+          docker manifest create DOCKERHUB_ORGANISATION/lorawannetworksrvmodule:$VERSION DOCKERHUB_ORGANISATION/lorawannetworksrvmodule:$VERSION-${{ matrix.image }} --amend
+          docker manifest create DOCKERHUB_ORGANISATION/lorabasicsstationmodule:$VERSION DOCKERHUB_ORGANISATION/lorabasicsstationmodule:$VERSION-${{ matrix.image }} --amend
+          docker manifest push DOCKERHUB_ORGANISATION/lorabasicsstationmodule:$VERSION
+          docker manifest push DOCKERHUB_ORGANISATION/lorawannetworksrvmodule:$VERSION
+    env: 
+      DOCKERHUB_ORGANISATION: "ouphi"
+
   CreateRelease:
     permissions:
       contents: write
@@ -49,7 +51,6 @@ jobs:
         run: |
           dotnet publish LoRaEngine/LoraKeysManagerFacade -c Release
           zip -r function-$VERSION.zip LoRaEngine/LoraKeysManagerFacade/bin/Release/net6.0
-          # TODO: Update function zip name in azuredeploy.json - Create a PR with updated version?
       - name: Package Discovery Service
         run: |
           dotnet publish LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/LoRaWan.NetworkServerDiscovery.csproj -c Release
@@ -57,14 +58,8 @@ jobs:
           PUBLISH_ZIP=discoveryservice-${VERSION}.beta1.zip
           zip -r $PUBLISH_ZIP $PUBLISH_FOLDER
       - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Release ${{ env.VERSION }} 
-          tag_name: v${{ env.VERSION }}
-          body_path: release_description.txt
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: |
-            function-${{ env.VERSION }}.zip
-            discoveryservice-${{ env.VERSION }}.beta1.zip
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          gh release create v${VERSION} --title 'Release v$VERSION' --prerelease --repo ${{ github.event.repository.name }} --notes ""
     needs: BuildAndPushDockerImages
     
