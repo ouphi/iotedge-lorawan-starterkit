@@ -56,7 +56,7 @@ jobs:
           git config user.email github-actions@github.com
       - name: Create branch
         run: |
-          BRANCH_NAME="docs/release-${VERSION}"
+          BRANCH_NAME="docs/release-${VERSION}-${{ github.run_id }}"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           git add docs/quickstart.md
           git commit -m "Update button URL."
