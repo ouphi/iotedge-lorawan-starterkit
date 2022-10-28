@@ -60,6 +60,6 @@ jobs:
       - name: Release
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-          gh release create v${VERSION} --title 'Release v$VERSION' --prerelease --repo ${{ github.event.repository.name }} --notes ""
+          gh release create v${VERSION} function-$VERSION.zip discoveryservice-${VERSION}.beta1.zip --title 'Release v$VERSION' --prerelease --repo ${{ github.event.repository.name }} --notes ""
     needs: BuildAndPushDockerImages
     
