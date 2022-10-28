@@ -52,7 +52,7 @@ jobs:
         run: sed -i "s/iotedge-lorawan-starterkit%2Fv[0-9\.]*/iotedge-lorawan-starterkit%2Fv${VERSION}/g" docs/quickstart.md
       - name: Set up git user using the built-in token
         run: |
-          git config user.name github-actions
+          git config user.name test-user
           git config user.email github-actions@github.com
       - name: Create branch
         run: |
