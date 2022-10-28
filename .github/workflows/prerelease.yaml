@@ -1,0 +1,13 @@
+name: Prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseTag:
+        description: 'Release tag'
+        required: true
+
+env:
+  VERSION: ${{ inputs.releaseTag }}
+
+jobs:
