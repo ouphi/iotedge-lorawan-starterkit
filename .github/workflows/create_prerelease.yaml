@@ -82,6 +82,7 @@ jobs:
           BRANCH_NAME="feature/update-version-${VERSION}-${{ github.run_id }}"
           DESCRIPTION="Update the default LoRaWAN Starter Kit version to use in Bicep with version $VERSION."
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
           git add TemplateBicep/main.bicep
           git commit -m "$DESCRIPTION"
           git checkout -b $BRANCH_NAME
@@ -89,7 +90,7 @@ jobs:
       - name: Create pull request
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-          gh pr create --repo ${{ github.repository }} --head $BRANCH_NAME --base "docs/main" --title "$DESCRIPTION" --body "$DESCRIPTION"
+          gh pr create --repo ${{ github.repository }} --head $BRANCH_NAME --base dev --title "$DESCRIPTION" --body "$DESCRIPTION"
 
 
   #CreateRelease:
