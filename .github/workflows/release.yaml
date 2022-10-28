@@ -50,16 +50,23 @@ jobs:
       - name: Package Azure Function
         run: |
           dotnet publish LoRaEngine/LoraKeysManagerFacade -c Release
-          zip -r function-$VERSION.zip LoRaEngine/LoraKeysManagerFacade/bin/Release/net6.0
+          zip -r $FUNCTION_ZIP LoRaEngine/LoraKeysManagerFacade/bin/Release/net6.0
       - name: Package Discovery Service
         run: |
           dotnet publish LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/LoRaWan.NetworkServerDiscovery.csproj -c Release
           PUBLISH_FOLDER=LoRaEngine/modules/LoRaWan.NetworkServerDiscovery/bin/Release/net6.0/publish
-          PUBLISH_ZIP=discoveryservice-${VERSION}.beta1.zip
-          zip -r $PUBLISH_ZIP $PUBLISH_FOLDER
+          zip -r $DISCOVERY_SERVICE_ZIP $PUBLISH_FOLDER
+      - name: Generate ARM file
+        run: |
+          az bicep build --file main.bicep
+          az bicep build --file main.bicep --outfile $ARM_FILE
       - name: Release
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-          gh release create v${VERSION} function-$VERSION.zip discoveryservice-${VERSION}.beta1.zip --title 'Release v$VERSION' --prerelease --repo ${{ github.event.repository.name }} --notes ""
+          gh release create v${VERSION} $ARM_FILE $FUNCTION_ZIP $DISCOVERY_SERVICE_ZIP --title 'Release v$VERSION' --prerelease --repo ${{ github.event.repository.name }} --notes ""
     needs: BuildAndPushDockerImages
+    env:
+      ARM_FILE: azuredeploy.json
+      FUNCTION_ZIP: function-$VERSION.zip
+      DISCOVERY_SERVICE_ZIP: discoveryservice-${VERSION}.beta1.zip
     
