@@ -39,7 +39,7 @@ jobs:
           docker manifest push $DOCKERHUB_ORGANISATION/lorabasicsstationmodule:$VERSION
           docker manifest push $DOCKERHUB_ORGANISATION/lorawannetworksrvmodule:$VERSION
     env: 
-      $DOCKERHUB_ORGANISATION: "ouphi"
+      DOCKERHUB_ORGANISATION: "ouphi"
 
   CreateRelease:
     permissions:
