@@ -1,0 +1,36 @@
+name: 'Create pull request'
+description: 'Commit local changes to a branch and create pull request.'
+
+inputs:
+  SOURCE_BRANCH:
+    description: 'Source branch. This branch will be created, the local changes committed to it before creating a pull request.'
+    required: true
+  TARGET_BRANCH:
+    description: 'Pull request Target branch.'
+    required: true
+  CHANGE_DESCRIPTION:
+    description: 'Description of the local changes. For simplicity, this description will be used for the commit message, the PR title and PR description.'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up git user using the built-in token
+      shell: bash
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+    - name: 'Create branch and commit local changes'
+      shell: bash
+      run: |
+        git checkout -b ${{ inputs.SOURCE_BRANCH }}
+        git add .
+        git commit -m ${{ inputs.CHANGE_DESCRIPTION }}
+        git push --set-upstream origin ${{ inputs.SOURCE_BRANCH }}
+    - name: 'Create pull request'
+      shell: bash
+      run: |
+        gh pr create --repo ${{ github.repository }} --head ${{ inputs.SOURCE_BRANCH }} \
+        --base ${{ inputs.TARGET_BRANCH }} --title ${{ inputs.CHANGE_DESCRIPTION }} \
+        --body ${{ inputs.CHANGE_DESCRIPTION }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
