@@ -6,6 +6,9 @@ on:
       releaseVersion:
         description: 'The release version, for example 2.0.0.'
         required: true
+  push:
+    branches:
+      - 'dev'
 
 env:
   VERSION: ${{ inputs.releaseVersion }}
