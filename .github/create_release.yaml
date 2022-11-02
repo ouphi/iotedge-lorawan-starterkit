@@ -1,0 +1,15 @@
+name: Create draft release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'The release version, for example 2.0.0.'
+        required: true
+
+env:
+  VERSION: ${{ inputs.releaseVersion }}
+  DOTNET_VERSION: '6.0.x'
+
+jobs:
+
